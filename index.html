@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <title>Neighborhood Map</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div id="mySidenav" class="sidenav">
+        <a class="closebtn" id="close-icon">&times;</a>
+        <p>Your addresses: </p>
+        <select multiple="multiple" width="50" data-bind="options: items"></select>
+    </div>
+    <div id = "main">
+        <header id="header">
+            <span id="menu-icon">&#9776;</span>
+            <input id="search-bar" type="text" placeholder="Search..">
+        </header>
+        <div id="app-map"></div>
+    </div>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYl1bbrRkHZv-tz7D4JgLFVAxRL1S7VFA&v=3&callback=initApp"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
+    <script type="text/javascript" src="js/consts.js"></script>
+    <script type="text/javascript" src="js/mapDatabase.js"></script>
+    <script type="text/javascript" src="js/googleMap.js"></script>
+    <script type="text/javascript" src="js/sideNav.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
+    <script type="text/javascript" src="js/initApp.js"></script>
+
+</body>
+</html>
