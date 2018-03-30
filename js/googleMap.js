@@ -1,63 +1,89 @@
 function googleMap(db) {
-    this.map = new google.maps.Map(document.getElementById('app-map'), {
+
+    /*
+        PRIVATE DATA
+    */
+    var appMap = new google.maps.Map(document.getElementById('app-map'), {
         center: INITIAL_CENTER,
         zoom: INITIAL_ZOOM
     });
 
+    /*
+        PUBLIC FUNCTIONS
+    */
+    this.mapObject =function() {
+        if(appMap != undefined) {
+            return appMap;
+        }
+    }
+
     this.initMap = function() {
-        this.addInitialMarkers();
-        // use tempfunc to access member function. THIS IS A WORK AROUND.
-        tempfunc = this.placeMarker;
-        google.maps.event.addListener(this.map, 'click', function(event) {
-            tempfunc(event.latLng);
+        addInitialMarkers();
+        google.maps.event.addListener(appMap, 'click', function(event) {
+            console.log(event.latLng.lat());
+            placeMarker(event.latLng);
         });
     }
 
-    this.addInitialMarkers = function() {
+    /*
+        PRIVATE FUNCTIONS
+    */
+
+    var addInfoWindow = function(marker) {
+        var infoWindow = new google.maps.InfoWindow();
+        marker.addListener('click', function() {
+            populateInfoWindow(this, infoWindow);
+        });
+    }
+
+    var addInitialMarkers = function() {
         var marker;
-        console.log(this.map);
         for(m in INITIAL_MARKERS) {
             marker = new google.maps.Marker({
                 position: INITIAL_MARKERS[m]['location'], 
-                map: this.map,
+                map: appMap,
                 title: INITIAL_MARKERS[m]['title'],
                 animation: google.maps.Animation.DROP
             });
             db.markers.push(marker);
-            this.addInfoWindow(marker);
+            addInfoWindow(marker);
         }
     }
 
-    this.placeMarker = function(location) {
+    var placeMarker = function(location) {
         var marker;
-        marker = new google.maps.Marker({
-            position: {lat: 40.719526, lng: -73.9980244}, 
-            map: this.map,
-            title: ""
-        });
-        console.log(this.map);
-        this.getLocByGeocoder(marker);
+        var add = {
+            address: ""
+        }
+        /*
+            NOTE: Inside of callback function, a function will not return
+            value, address has to be passed in as a parameter. Since
+            javascript always pass in variable by value, add has to be pass
+            into function as an object.
+        */
+        setLocByGeocoder(location, add);
+        if(add.address != "")
+        {
+            marker = new google.maps.Marker({
+                position: location, 
+                map: appMap,
+                title: ""
+            });
+        }
         var infoWindow = new google.maps.InfoWindow({
             content: marker.title
         });
         db.markers.push(marker);
-        this.addInfoWindow(marker);
+        addInfoWindow(marker);
     }
 
-    this.addInfoWindow = function(marker) {
-        var infoWindow = new google.maps.InfoWindow();
-        tempfunc = this.populateInfoWindow;
-        marker.addListener('click', function() {
-                tempfunc(this, infoWindow);
-        });
-    }
 
-    this.populateInfoWindow = function(marker, infowindow) {
+    var populateInfoWindow = function(marker, infowindow) {
     // Check to make sure the infowindow is not already opened on this marker.
         if (infowindow.marker != marker) {
           infowindow.marker = marker;
           infowindow.setContent('<div>' + marker.title + '</div>');
-          infowindow.open(this.map, marker);
+          infowindow.open(appMap, marker);
           // Make sure the marker property is cleared if the infowindow is closed.
           infowindow.addListener('closeclick', function() {
             infowindow.marker = null;
@@ -65,17 +91,17 @@ function googleMap(db) {
         }
     }
 
-    this.getLocByGeocoder = function(marker) {
+    var setLocByGeocoder = function(location, add) {
         var geocoder = new google.maps.Geocoder;
-        geocoder.geocode({'location': marker.location}, function(results, status) {
+        geocoder.geocode({'location': location}, function(results, status) {
             if(status == 'OK') {
                 if(results[0]) {
-                    marker.setTitle(results[0].formatted_address);
+                    add.address = results[0].formatted_address;
                 } else {
-                    marker.setTitle("UNKNOW ADDRESS");
+                    add.address = "UNKNOW ADDRESS";
                 }
             } else {
-                marker.setTitle("Please re-add marker");
+                add.address = "";
                 window.alert('Geocoder failed due to: ' + status);
             }
         });
