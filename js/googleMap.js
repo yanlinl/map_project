@@ -8,6 +8,8 @@ function googleMap(db) {
         zoom: INITIAL_ZOOM
     });
 
+    // Create only one infoWindow instance.
+    var infoWindow = new google.maps.InfoWindow();
     /*
         PUBLIC FUNCTIONS
     */
@@ -29,9 +31,8 @@ function googleMap(db) {
     */
 
     var addInfoWindow = function(marker) {
-        var infoWindow = new google.maps.InfoWindow();
         marker.addListener('click', function() {
-            populateInfoWindow(this, infoWindow);
+            populateInfoWindow(this);
         });
     }
 
@@ -71,15 +72,15 @@ function googleMap(db) {
     }
 
 
-    var populateInfoWindow = function(marker, infowindow) {
+    var populateInfoWindow = function(marker) {
     // Check to make sure the infowindow is not already opened on this marker.
-        if (infowindow.marker != marker) {
-          infowindow.marker = marker;
-          infowindow.setContent('<div>' + marker.title + '</div>');
-          infowindow.open(appMap, marker);
+        if (infoWindow.marker != marker) {
+          infoWindow.marker = marker;
+          infoWindow.setContent('<div>' + marker.title + '</div>');
+          infoWindow.open(appMap, marker);
           // Make sure the marker property is cleared if the infowindow is closed.
-          infowindow.addListener('closeclick', function() {
-            infowindow.marker = null;
+          infoWindow.addListener('closeclick', function() {
+            infoWindow.marker = null;
           });
         }
     }
