@@ -52,10 +52,6 @@ function googleMap(db) {
 
     var placeMarker = function(location) {
         var marker;
-        var d = function() {
-            this.address = "";
-        }
-        var a = new d();
         marker = new google.maps.Marker({
             position: location, 
             map: appMap,
