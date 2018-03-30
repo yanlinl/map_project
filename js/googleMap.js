@@ -20,7 +20,6 @@ function googleMap(db) {
     this.initMap = function() {
         addInitialMarkers();
         google.maps.event.addListener(appMap, 'click', function(event) {
-            console.log(event.latLng.lat());
             placeMarker(event.latLng);
         });
     }
@@ -52,27 +51,21 @@ function googleMap(db) {
 
     var placeMarker = function(location) {
         var marker;
-        var add = {
-            address: ""
+        var d = function() {
+            this.address = "";
         }
-        /*
-            NOTE: Inside of callback function, a function will not return
-            value, address has to be passed in as a parameter. Since
-            javascript always pass in variable by value, add has to be pass
-            into function as an object.
-        */
-        setLocByGeocoder(location, add);
-        if(add.address != "")
-        {
-            marker = new google.maps.Marker({
-                position: location, 
-                map: appMap,
-                title: ""
-            });
-        }
-        var infoWindow = new google.maps.InfoWindow({
-            content: marker.title
+        var a = new d();
+        marker = new google.maps.Marker({
+            position: location, 
+            map: appMap,
+            title: ""
         });
+        /*
+            For some reason, this function does not return any value. I use an
+            object to store address, but the object come back as unchanged. I
+            have not find the reason for this beheavior.
+        */
+        setLocByGeocoder(marker);
         db.markers.push(marker);
         addInfoWindow(marker);
     }
@@ -91,17 +84,17 @@ function googleMap(db) {
         }
     }
 
-    var setLocByGeocoder = function(location, add) {
+    var setLocByGeocoder = function(marker) {
         var geocoder = new google.maps.Geocoder;
-        geocoder.geocode({'location': location}, function(results, status) {
+        geocoder.geocode({'location': marker.position}, function(results, status) {
             if(status == 'OK') {
                 if(results[0]) {
-                    add.address = results[0].formatted_address;
+                    marker.setTitle(results[0].formatted_address);
                 } else {
-                    add.address = "UNKNOW ADDRESS";
+                    a.address = "UNKNOW ADDRESS";
                 }
             } else {
-                add.address = "";
+                a.address = "";
                 window.alert('Geocoder failed due to: ' + status);
             }
         });
