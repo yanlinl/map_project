@@ -30,9 +30,9 @@ function googleMap(db) {
         PRIVATE FUNCTIONS
     */
 
-    var showInfoWindow = function(marker) {
+    var addInfoWindowListener = function(marker) {
         marker.addListener('click', function() {
-            populateInfoWindow(this);
+            this.showInfo(this);
         });
     }
 
@@ -45,7 +45,7 @@ function googleMap(db) {
                 title: INITIAL_MARKERS[m]['title'],
                 animation: google.maps.Animation.DROP
             });
-            showInfoWindow(marker);
+            addInfoWindowListener(marker);
             marker.showInfo = populateInfoWindow;
             db.markers.push(marker);
         }
@@ -64,8 +64,9 @@ function googleMap(db) {
             have not find the reason for this beheavior.
         */
         setLocByGeocoder(marker);
+        marker.showInfo = populateInfoWindow;
         db.markers.push(marker);
-        showInfoWindow(marker);
+        addInfoWindowListener(marker);
     }
 
 
