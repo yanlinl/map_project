@@ -91,10 +91,9 @@ function googleMap(db) {
                 if(results[0]) {
                     marker.setTitle(results[0].formatted_address);
                 } else {
-                    a.address = "UNKNOW ADDRESS";
+                    marker.setTitle("UNKNOW ADDRESS");
                 }
             } else {
-                a.address = "";
                 window.alert('Geocoder failed due to: ' + status);
             }
         });
