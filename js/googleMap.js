@@ -30,7 +30,7 @@ function googleMap(db) {
         PRIVATE FUNCTIONS
     */
 
-    var addInfoWindow = function(marker) {
+    var showInfoWindow = function(marker) {
         marker.addListener('click', function() {
             populateInfoWindow(this);
         });
@@ -45,8 +45,9 @@ function googleMap(db) {
                 title: INITIAL_MARKERS[m]['title'],
                 animation: google.maps.Animation.DROP
             });
+            showInfoWindow(marker);
+            marker.showInfo = populateInfoWindow;
             db.markers.push(marker);
-            addInfoWindow(marker);
         }
     }
 
@@ -64,12 +65,12 @@ function googleMap(db) {
         */
         setLocByGeocoder(marker);
         db.markers.push(marker);
-        addInfoWindow(marker);
+        showInfoWindow(marker);
     }
 
 
     var populateInfoWindow = function(marker) {
-    // Check to make sure the infowindow is not already opened on this marker.
+        // Check to make sure the infowindow is not already opened on this marker.
         if (infoWindow.marker != marker) {
           infoWindow.marker = marker;
           infoWindow.setContent('<div>' + marker.title + '</div>');
