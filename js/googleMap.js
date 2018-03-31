@@ -101,7 +101,7 @@ function googleMap() {
 
 
 var koList = function() {
-    this.search = ko.observable("");
+    this.searchMarkers = ko.observable("");
     this.markers = ko.observableArray();
     this.addMarker = function(marker) {
         console.log(this.markers.length);
@@ -109,7 +109,7 @@ var koList = function() {
     }
     this.filterted_loc = ko.computed(function() {
         var results = [];
-        var searchWord = this.search().toLowerCase();
+        var searchWord = this.searchMarkers().toLowerCase();
         ko.utils.arrayForEach(this.markers(), function(marker) {
             if(marker.title.toLowerCase().includes(searchWord)) {
                 results.push(marker);
