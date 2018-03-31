@@ -1,4 +1,4 @@
-function sideNav(db) {
+function sideNav() {
 
     /*
         DATA OF OBJECT

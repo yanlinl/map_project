@@ -9,12 +9,8 @@
     <div id="mySidenav" class="sidenav">
         <a class="closebtn" id="close-icon">&times;</a>
         <input data-bind="textInput:'search', valueUpdate: 'afterkeydown'" type="text" placeholder="Search..">
-        <ul data-bind="foreach: marker">
-            <a  data-bind="text: title, click: $data.showInfo"></a>
-        </ul>
-        <br>
         <ul data-bind="foreach: filterted_loc">
-            <a  data-bind="text: title"></a>
+            <a  data-bind="text: title, click: $data.showInfo"></a>
         </ul>
     </div>
     <div id = "main">
@@ -26,7 +22,6 @@
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYl1bbrRkHZv-tz7D4JgLFVAxRL1S7VFA&v=3&callback=initApp"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
     <script type="text/javascript" src="js/consts.js"></script>
-    <script type="text/javascript" src="js/mapDatabase.js"></script>
     <script type="text/javascript" src="js/googleMap.js"></script>
     <script type="text/javascript" src="js/sideNav.js"></script>
     <script type="text/javascript" src="js/app.js"></script>

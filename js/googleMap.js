@@ -1,4 +1,4 @@
-function googleMap(db) {
+function googleMap() {
 
     /*
         PRIVATE DATA
@@ -8,7 +8,7 @@ function googleMap(db) {
         zoom: INITIAL_ZOOM
     });
 
-    this.listModel = koList(db.markers);
+    var listModel = new koList();
 
     // Create only one infoWindow instance.
     var infoWindow = new google.maps.InfoWindow();
@@ -26,7 +26,7 @@ function googleMap(db) {
         google.maps.event.addListener(appMap, 'click', function(event) {
             placeMarker(event.latLng);
         });
-        ko.applyBindings(this.listModel);
+        ko.applyBindings(listModel);
     }
 
     /*
@@ -50,7 +50,7 @@ function googleMap(db) {
             });
             addInfoWindowListener(marker);
             marker.showInfo = populateInfoWindow;
-            db.markers.push(marker);
+            listModel.addMarker(marker);
         }
     }
 
@@ -61,26 +61,21 @@ function googleMap(db) {
             map: appMap,
             title: ""
         });
-        /*
-            For some reason, this function does not return any value. I use an
-            object to store address, but the object come back as unchanged. I
-            have not find the reason for this beheavior.
-        */
+
         setLocByGeocoder(marker);
         marker.showInfo = populateInfoWindow;
-        db.markers.push(marker);
         addInfoWindowListener(marker);
     }
-
 
     var populateInfoWindow = function(marker) {
         // Check to make sure the infowindow is not already opened on this marker.
         if (infoWindow.marker != marker) {
-          infoWindow.marker = marker;
-          infoWindow.setContent('<div>' + marker.title + '</div>');
-          infoWindow.open(appMap, marker);
-          // Make sure the marker property is cleared if the infowindow is closed.
-          infoWindow.addListener('closeclick', function() {
+            console.log(marker);
+            infoWindow.marker = marker;
+            infoWindow.setContent('<div>' + marker.title + '</div>');
+            infoWindow.open(appMap, marker);
+            // Make sure the marker property is cleared if the infowindow is closed.
+            infoWindow.addListener('closeclick', function() {
             infoWindow.marker = null;
           });
         }
@@ -88,10 +83,12 @@ function googleMap(db) {
 
     var setLocByGeocoder = function(marker) {
         var geocoder = new google.maps.Geocoder;
+        console.log(marker.position);
         geocoder.geocode({'location': marker.position}, function(results, status) {
             if(status == 'OK') {
                 if(results[0]) {
-                    marker.setTitle(results[0].formatted_address);
+                    marker.setTitle(results[0].formatted_address.split(',')[0]);
+                    listModel.addMarker(marker);
                 } else {
                     marker.setTitle("UNKNOW ADDRESS");
                 }
@@ -103,24 +100,24 @@ function googleMap(db) {
 }
 
 
-var koList = function(arr) {
-    temp = arr;
+var koList = function() {
     this.search = ko.observable("");
-    this.marker = ko.observableArray(arr);
+    this.markers = ko.observableArray();
+    this.addMarker = function(marker) {
+        console.log(this.markers.length);
+        this.markers.push(marker);
+    }
     this.filterted_loc = ko.computed(function() {
         var results = [];
         var searchWord = this.search().toLowerCase();
-        console.log(searchWord);
-        console.log(arr);
-        for(var i = 0; i < arr.length; i++) {
-            console.log("here");
-            if(arr[i].title.toLowerCase().include(searchWord)) {
-                results.push(arr[i]);
-                arr[i].setVisible(true);
+        ko.utils.arrayForEach(this.markers(), function(marker) {
+            if(marker.title.toLowerCase().includes(searchWord)) {
+                results.push(marker);
+                marker.setVisible(true);
             } else {
-                arr[i].setVisible(false);
+                marker.setVisible(false);
             }
-        }
+        });
         return results;
     }, this);
 };
