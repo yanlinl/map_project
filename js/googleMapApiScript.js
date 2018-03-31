@@ -1,0 +1,8 @@
+/**
+ * Class for this application.
+ * Add google map API.
+ */
+(function() {
+    var script = SCRIPT_PRE_KEY + APIKEY + SCRIPT_AFTER_KEY;
+    $(script).appendTo(document.body);
+})();

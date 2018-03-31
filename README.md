@@ -18,6 +18,7 @@ objects.
 - `googleMap.js`-Google map object.
 - `consts.js`-Stores all the consts for this project.
 - `koList.js`-Knockout js object.
+- `googleMapApiScript.js`-Add google map API to html file.
 
 OUT - Documentation for this project.
 
@@ -30,7 +31,8 @@ HTML - `index.html`-Web application.
 
 ## Installation
 1. Obtains a google map API key.
-2. Find line 22 in `index.html` replace `API-KEY` with your api key.
+2. Find variable `APIKEY` in line 6 in `consts.js` replace `API-KEY` with your
+api key.
 3. Open `index.html`.
 
 ## Live Example
