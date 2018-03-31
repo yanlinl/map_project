@@ -8,6 +8,8 @@ function googleMap(db) {
         zoom: INITIAL_ZOOM
     });
 
+    this.listModel = koList(db.markers);
+
     // Create only one infoWindow instance.
     var infoWindow = new google.maps.InfoWindow();
     /*
@@ -24,6 +26,7 @@ function googleMap(db) {
         google.maps.event.addListener(appMap, 'click', function(event) {
             placeMarker(event.latLng);
         });
+        ko.applyBindings(this.listModel);
     }
 
     /*
@@ -98,3 +101,26 @@ function googleMap(db) {
         });
     }
 }
+
+
+var koList = function(arr) {
+    temp = arr;
+    this.search = ko.observable("");
+    this.marker = ko.observableArray(arr);
+    this.filterted_loc = ko.computed(function() {
+        var results = [];
+        var searchWord = this.search().toLowerCase();
+        console.log(searchWord);
+        console.log(arr);
+        for(var i = 0; i < arr.length; i++) {
+            console.log("here");
+            if(arr[i].title.toLowerCase().include(searchWord)) {
+                results.push(arr[i]);
+                arr[i].setVisible(true);
+            } else {
+                arr[i].setVisible(false);
+            }
+        }
+        return results;
+    }, this);
+};

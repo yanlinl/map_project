@@ -6,13 +6,10 @@ function sideNav(db) {
     this.openIcon = document.getElementById("menu-icon");
     this.closeIcon = document.getElementById("close-icon");
 
-    this.listModel = koList(db.titles);
-
     /*
         PUBLIC FUNCTIONS
     */
     this.initSideNav = function() {
-        ko.applyBindings(this.listModel);
         this.openIcon.addEventListener('click', openNav);
         this.closeIcon.addEventListener('click', closeNav);
     }
@@ -33,7 +30,3 @@ function sideNav(db) {
         document.body.style.backgroundColor = "white";
     }
 }
-
-var koList = function(arr) {
-    this.items = ko.observableArray(arr);
-};

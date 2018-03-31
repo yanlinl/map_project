@@ -8,13 +8,18 @@
 <body>
     <div id="mySidenav" class="sidenav">
         <a class="closebtn" id="close-icon">&times;</a>
-        <p>Your addresses: </p>
-        <select multiple="multiple" width="50" data-bind="options: items"></select>
+        <input data-bind="textInput:'search', valueUpdate: 'afterkeydown'" type="text" placeholder="Search..">
+        <ul data-bind="foreach: marker">
+            <a  data-bind="text: title, click: $data.showInfo"></a>
+        </ul>
+        <br>
+        <ul data-bind="foreach: filterted_loc">
+            <a  data-bind="text: title"></a>
+        </ul>
     </div>
     <div id = "main">
         <header id="header">
             <span id="menu-icon">&#9776;</span>
-            <input id="search-bar" type="text" placeholder="Search..">
         </header>
         <div id="app-map"></div>
     </div>
