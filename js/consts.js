@@ -1,6 +1,8 @@
+/** Stores initial map information. */
 var INITIAL_CENTER = {lat: 40.719526, lng: -73.9980244};
 var INITIAL_ZOOM = 13;
 
+/** Stores initial locations. */
 var INITIAL_MARKERS = [
     {title: 'Park Ave Penthouse', location: {lat: 40.7713024, lng: -73.9632393}},
     {title: 'Chelsea Loft', location: {lat: 40.7444883, lng: -73.9949465}},
