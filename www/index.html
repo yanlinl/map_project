@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/styles.css">
     <title>Neighborhood Map</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
     <div id="mySidenav" class="sidenav">
-        <a class="closebtn" id="close-icon">&times;</a>
-        <input data-bind="textInput: searchMarkers, valueUpdate: ['afterkeydown', searchMarkers]" type="text" placeholder="Search..">
-        <ul data-bind="foreach: filterted_loc">
-            <a  data-bind="text: title, click: $data.showInfo"></a>
+        <input class="search-input form-control input-sm" id="inputsm" data-bind="textInput: searchMarkers, valueUpdate: ['afterkeydown', searchMarkers]" type="text" placeholder="Filter list items">
+        <ul class="list-group" data-bind="foreach: filterted_loc">
+            <a class="list-group-item" data-bind="text: title, click: $data.showInfo"></a>
         </ul>
     </div>
     <div id = "main">
@@ -19,10 +20,20 @@
         </header>
         <div id="app-map"></div>
     </div>
-    <script type="text/javascript" src="js/consts.js"></script>
+    <!-- Latest compiled jquery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script type="text/javascript" src="js/googleMapApiScript.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!-- Add google map API -->
+    <script type="text/javascript" src="js/consts.js"></script>
+
+    <!-- Add Knockoutjs -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
+
+    <!-- Custom javascript files -->
+    <script type="text/javascript" src="js/googleMapApiScript.js"></script>
     <script type="text/javascript" src="js/koList.js"></script>
     <script type="text/javascript" src="js/googleMap.js"></script>
     <script type="text/javascript" src="js/sideNav.js"></script>

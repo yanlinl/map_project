@@ -13,7 +13,6 @@ var koList = function() {
 
     // add a marker to list
     this.addMarker = function(marker) {
-        console.log(this.markers.length);
         this.markers.push(marker);
     }
 
