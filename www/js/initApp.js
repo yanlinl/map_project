@@ -3,3 +3,7 @@ function initApp() {
     window.webApp = new app();
     webApp.initWebApp();
 }
+
+function googleError(){
+    alert("Failed to load Google Maps.");
+}

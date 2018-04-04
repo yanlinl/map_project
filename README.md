@@ -24,13 +24,20 @@ OUT - Documentation for this project.
 
 HTML - `index.html`-Web application.
 
+## API
+
+Google Map API
+
+LocationIq API
+
 ## Features
 1. Show previously defined locations on the map.
 2. Add location when click anywhere on the map.
 3. Filter locations when enter text in the search box.
+4. Uses LocationIq to get nearby restaurants.
 
 ## Installation
-1. Obtains a google map API key.
+1. Obtains a google map API key and a API key from [locationIq](https://locationiq.org/).
 2. Find variable `APIKEY` in line 6 in `consts.js` replace `API-KEY` with your
 api key.
 3. Open `index.html`.

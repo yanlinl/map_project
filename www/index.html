@@ -3,12 +3,14 @@
 <head>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="css/styles.css">
     <title>Neighborhood Map</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
     <div id="mySidenav" class="sidenav">
+        <h2>Your location</h2>
         <input class="search-input form-control input-sm" id="inputsm" data-bind="textInput: searchMarkers, valueUpdate: ['afterkeydown', searchMarkers]" type="text" placeholder="Filter list items">
         <ul class="list-group" data-bind="foreach: filterted_loc">
             <a class="list-group-item" data-bind="text: title, click: $data.showInfo"></a>

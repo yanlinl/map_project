@@ -12,10 +12,18 @@ function googleMap() {
         zoom: INITIAL_ZOOM
     });
 
+    var bounceMarker = null;
+
     var listModel = new koList();
 
     // Create only one infoWindow instance.
-    var infoWindow = new google.maps.InfoWindow();
+    var infoWindow = new google.maps.InfoWindow(
+        {
+            content: "",
+            maxWidth: 200,
+            maxHight: 100,
+        }
+    );
 
 
     /*
@@ -57,6 +65,15 @@ function googleMap() {
         // add event listener
         marker.addListener('click', function() {
             this.showInfo(this);
+            if(bounceMarker != null) {
+                bounceMarker.setAnimation(null);
+            }
+            bounceMarker = this;
+            if(this.getAnimation() !== null) {
+                this.setAnimation(null);
+            } else {
+                this.setAnimation(google.maps.Animation.BOUNCE);
+            }
         });
     }
 
@@ -75,6 +92,7 @@ function googleMap() {
                 animation: google.maps.Animation.DROP
             });
             addInfoWindowListener(marker);
+            getNearbyRestaurants(marker);
             marker.showInfo = populateInfoWindow;
             listModel.addMarker(marker);
         }
@@ -89,13 +107,14 @@ function googleMap() {
         marker = new google.maps.Marker({
             position: location, 
             map: appMap,
-            title: ""
+            title: "",
+            animation: google.maps.Animation.DROP
         });
-        // Set marker title to be address.
-        setLocByGeocoder(marker);
-        // Link populateInfoWindow method to marker object.
         marker.showInfo = populateInfoWindow;
         addInfoWindowListener(marker);
+        // Set marker title to be address.
+        getNearbyRestaurants(marker);
+        setLocByGeocoder(marker);
     }
 
     /**
@@ -104,14 +123,22 @@ function googleMap() {
      */
     var populateInfoWindow = function(marker) {
         // Check if infowindow is already open
+        var infoWindowContent = '<h5>' + "Address: " + marker.title + '</h5><br>';
+        infoWindowContent += "<h6>Nearby Restaurants: </h6>";
         if (infoWindow.marker != marker) {
             infoWindow.marker = marker;
-            infoWindow.setContent('<div>' + marker.title + '</div>');
+            infoWindowContent += "<ul class=\"list-group\">"
+            for(i in marker.nearbyRestaurants) {
+                var temp = '<a class=\"list-group-item\">' + "Name: " + marker.nearbyRestaurants[i].name + '</a>';
+                infoWindowContent += temp;
+            }
+            infoWindowContent += "</ul>";
+            infoWindow.setContent(infoWindowContent);
             infoWindow.open(appMap, marker);
             // Make sure the marker property is cleared if the infowindow is closed.
             infoWindow.addListener('closeclick', function() {
-            infoWindow.marker = null;
-          });
+                infoWindow.marker = null;
+            });
         }
     }
 
@@ -121,7 +148,6 @@ function googleMap() {
      */
     var setLocByGeocoder = function(marker) {
         var geocoder = new google.maps.Geocoder;
-        console.log(marker.position);
         geocoder.geocode({'location': marker.position}, function(results, status) {
             if(status == 'OK') {
                 if(results[0]) {
@@ -133,7 +159,7 @@ function googleMap() {
                         asynchronously. If we add when the marker was created,
                         marker.title will be null.
                     */
-                    listModel.addMarker(marker);
+                       listModel.addMarker(marker);
                 } else {
                     // Set marker to be unknow if the address is not found.
                     marker.setTitle("UNKNOW ADDRESS");
@@ -142,5 +168,34 @@ function googleMap() {
                 window.alert('Geocoder failed due to: ' + status);
             }
         });
+    }
+
+    /**
+     * Get restaurants near this location
+     *
+     */
+    var getNearbyRestaurants = function(marker) {
+        var result;
+        var url = "https://us1.locationiq.org/v1/nearby.php?key=";
+        url += APIKEY_LOCATION_IQ;
+        url = url + "&lat=" + marker.position.lat().toString();
+        url = url + "&lon=" + marker.position.lng().toString();
+        url += "&tag=restaurant&radius=500&format=json"
+
+        var settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": url,
+            "method": "GET"
+        }
+
+        $.ajax(settings).done(function (response) {
+            marker.nearbyRestaurants = response;
+        }).fail(function() {
+            // if request failed
+            alert(
+                "Fail to get nearby restaurants."
+            );
+        });;
     }
 }
