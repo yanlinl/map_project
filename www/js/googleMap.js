@@ -64,17 +64,29 @@ function googleMap() {
     var addInfoWindowListener = function(marker) {
         // add event listener
         marker.addListener('click', function() {
-            this.showInfo(this);
-            if(bounceMarker != null) {
-                bounceMarker.setAnimation(null);
-            }
-            bounceMarker = this;
-            if(this.getAnimation() !== null) {
-                this.setAnimation(null);
-            } else {
-                this.setAnimation(google.maps.Animation.BOUNCE);
-            }
+            this.click(this);
         });
+    }
+
+    /**
+     * Make the marker bounce when clicked.
+     *
+     */
+    var clickBounce = function(marker) {
+        if(bounceMarker != null) {
+            bounceMarker.setAnimation(null);
+        }
+        bounceMarker = marker;
+        if(marker.getAnimation() !== null) {
+            marker.setAnimation(null);
+        } else {
+            marker.setAnimation(google.maps.Animation.BOUNCE);
+        }
+    }
+
+    var clickAction = function(marker) {
+        clickBounce(marker);
+        populateInfoWindow(marker);
     }
 
     /**
@@ -93,7 +105,7 @@ function googleMap() {
             });
             addInfoWindowListener(marker);
             getNearbyRestaurants(marker);
-            marker.showInfo = populateInfoWindow;
+            marker.click = clickAction;
             listModel.addMarker(marker);
         }
     }
@@ -110,7 +122,7 @@ function googleMap() {
             title: "",
             animation: google.maps.Animation.DROP
         });
-        marker.showInfo = populateInfoWindow;
+        marker.click = clickAction;
         addInfoWindowListener(marker);
         // Set marker title to be address.
         getNearbyRestaurants(marker);

@@ -13,7 +13,7 @@
         <h2>Your location</h2>
         <input class="search-input form-control input-sm" id="inputsm" data-bind="textInput: searchMarkers, valueUpdate: ['afterkeydown', searchMarkers]" type="text" placeholder="Filter list items">
         <ul class="list-group" data-bind="foreach: filterted_loc">
-            <a class="list-group-item" data-bind="text: title, click: $data.showInfo"></a>
+            <a class="list-group-item" data-bind="text: title, click: $data.click"></a>
         </ul>
     </div>
     <div id = "main">
