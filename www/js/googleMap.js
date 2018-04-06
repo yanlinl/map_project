@@ -203,11 +203,16 @@ function googleMap() {
 
         $.ajax(settings).done(function (response) {
             marker.nearbyRestaurants = response;
-        }).fail(function() {
+        }).fail(function(xhr, textStatus, error) {
             // if request failed
-            alert(
-                "Fail to get nearby restaurants."
-            );
+            if(xhr.status == 404)
+            {
+                marker.nearbyRestaurants = "No Restaurants in 500 meter radius";
+            } else if(xhr.status == 429) {
+                marker.nearbyRestaurants = "Too many locationIq API call";
+            }
+
+            //console.log(xhr.status, textStatus, error);
         });;
     }
 }

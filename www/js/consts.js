@@ -4,7 +4,7 @@ var INITIAL_ZOOM = 13;
 
 /** API key for google map api. */
 var APIKEY_GOOGLE_MAP = "AIzaSyAYl1bbrRkHZv-tz7D4JgLFVAxRL1S7VFA";
-var APIKEY_LOCATION_IQ = "9f1037ebcbed89";
+var APIKEY_LOCATION_IQ = "99967a85cf9353";
 var SCRIPT_PRE_KEY = "<script async defer src=\"https://maps.googleapis.com/maps/api/js?key=";
 var SCRIPT_AFTER_KEY = "&v=3&callback=initApp\" onerror=\"googleError\"<\\script>";
 
