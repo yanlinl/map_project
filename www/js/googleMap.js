@@ -86,7 +86,7 @@ function googleMap() {
 
     var clickAction = function(marker) {
         clickBounce(marker);
-        populateInfoWindow(marker);
+        getNearbyRestaurants(marker, populateInfoWindow);
     }
 
     /**
@@ -103,8 +103,9 @@ function googleMap() {
                 title: INITIAL_MARKERS[m]['title'],
                 animation: google.maps.Animation.DROP
             });
+            marker.ifEmpty = false;
+            marker.tooManyCall = false;
             addInfoWindowListener(marker);
-            getNearbyRestaurants(marker);
             marker.click = clickAction;
             listModel.addMarker(marker);
         }
@@ -123,9 +124,10 @@ function googleMap() {
             animation: google.maps.Animation.DROP
         });
         marker.click = clickAction;
+        marker.ifEmpty = false;
+        marker.tooManyCall = false;
         addInfoWindowListener(marker);
         // Set marker title to be address.
-        getNearbyRestaurants(marker);
         setLocByGeocoder(marker);
     }
 
@@ -136,15 +138,25 @@ function googleMap() {
     var populateInfoWindow = function(marker) {
         // Check if infowindow is already open
         var infoWindowContent = '<h5>' + "Address: " + marker.title + '</h5><br>';
-        infoWindowContent += "<h6>Nearby Restaurants: </h6>";
+
         if (infoWindow.marker != marker) {
             infoWindow.marker = marker;
-            infoWindowContent += "<ul class=\"list-group\">"
-            for(i in marker.nearbyRestaurants) {
-                var temp = '<a class=\"list-group-item\">' + "Name: " + marker.nearbyRestaurants[i].name + '</a>';
-                infoWindowContent += temp;
+
+            if(marker.tooManyCall == true) {
+                infoWindowContent += "<p> Too many locationIq calls, please wait for response.</p>";
+            } else if (marker.ifEmpty == true) {
+                infoWindowContent += "<p> No restuarants in 500 radius.</p>";
+            } else {
+                infoWindowContent += "<h6>Nearby Restaurants: </h6>";
+                infoWindowContent += "<ul class=\"list-group\">"
+
+                for(i in marker.nearbyRestaurants) {
+                    var temp = '<a class=\"list-group-item\">' + "Name: " + marker.nearbyRestaurants[i].name + '</a>';
+                    infoWindowContent += temp;
+                }
+                infoWindowContent += "</ul>";
             }
-            infoWindowContent += "</ul>";
+            
             infoWindow.setContent(infoWindowContent);
             infoWindow.open(appMap, marker);
             // Make sure the marker property is cleared if the infowindow is closed.
@@ -186,7 +198,7 @@ function googleMap() {
      * Get restaurants near this location
      *
      */
-    var getNearbyRestaurants = function(marker) {
+    var getNearbyRestaurants = function(marker, callback) {
         var result;
         var url = "https://us1.locationiq.org/v1/nearby.php?key=";
         url += APIKEY_LOCATION_IQ;
@@ -203,16 +215,18 @@ function googleMap() {
 
         $.ajax(settings).done(function (response) {
             marker.nearbyRestaurants = response;
+            callback(marker);
         }).fail(function(xhr, textStatus, error) {
             // if request failed
             if(xhr.status == 404)
             {
-                marker.nearbyRestaurants = "No Restaurants in 500 meter radius";
+                marker.nearbyRestaurants.ifEmpty = true;
             } else if(xhr.status == 429) {
-                marker.nearbyRestaurants = "Too many locationIq API call";
+                marker.tooManyCall = true;
+            } else {
+                window.alert('Failed to get nearby restaurants ' + status);
             }
 
-            //console.log(xhr.status, textStatus, error);
-        });;
+        });
     }
 }

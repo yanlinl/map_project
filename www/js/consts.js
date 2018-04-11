@@ -3,11 +3,7 @@ var INITIAL_CENTER = {lat: 40.719526, lng: -73.9980244};
 var INITIAL_ZOOM = 13;
 
 /** API key for google map api. */
-var APIKEY_GOOGLE_MAP = "AIzaSyAYl1bbrRkHZv-tz7D4JgLFVAxRL1S7VFA";
 var APIKEY_LOCATION_IQ = "99967a85cf9353";
-var SCRIPT_PRE_KEY = "<script async defer src=\"https://maps.googleapis.com/maps/api/js?key=";
-var SCRIPT_AFTER_KEY = "&v=3&callback=initApp\" onerror=\"googleError\"<\\script>";
-
 
 /** Stores initial locations. */
 var INITIAL_MARKERS = [
